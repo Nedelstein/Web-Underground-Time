@@ -1,7 +1,7 @@
 'use strict';
 
 const canvas = document.getElementsByTagName('canvas')[0];
-const canvas = document.getElementsByTagName('body');
+// const canvas = document.getElementsByTagName('body');
 
 // canvas.width = canvas.clientWidth;
 // canvas.height = canvas.clientHeight;
