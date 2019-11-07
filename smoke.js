@@ -1,23 +1,10 @@
 'use strict';
-
-// const canvas = document.getElementsByTagName('canvas')[0];
-
-
-
-
-
-
-
-
+// var ctx;
 
 window.addEventListener('load', function () {
     const canvas = document.getElementById('myCanvas');
-    // canvas.width = canvas.clientWidth;
-    // canvas.height = canvas.clientHeight;
-    // canvas.width = window.innerWidth;
-    // canvas.height = window.innerHeight;
 
-    console.log(canvas);
+
     const { gl, ext } = getWebGLContext(canvas);
 
     let config = {
@@ -27,7 +14,7 @@ window.addEventListener('load', function () {
         PRESSURE_DISSIPATION: 0.8,
         PRESSURE_ITERATIONS: 25,
         CURL: 30,
-        SPLAT_RADIUS: 0.005
+        SPLAT_RADIUS: 0.009
     }
 
     let pointers = [];
@@ -51,7 +38,7 @@ window.addEventListener('load', function () {
             supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
         }
 
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clearColor(0.0, 0.0, 0.0, 0.0);
 
         const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES;
         let formatRGBA;
@@ -413,6 +400,29 @@ window.addEventListener('load', function () {
     }
 `);
 
+    const circShader = compileShader(gl.FRAGMENT_SHADER, `
+    precision mediump float;
+
+    uniform vec2 u_resolution;
+    uniform vec2 u_mouse;
+    uniform float u_time;
+
+    float circle(in vec2 _st, in float _radius){
+        vec2 dist = _st-vec2(0.5);
+	    return 1.-smoothstep(_radius-(_radius*0.01),
+                         _radius+(_radius*0.01),
+                         dot(dist,dist)*4.0);
+    }
+
+    void main(){
+	    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+
+	    vec3 color = vec3(circle(st,0.7));
+
+	    gl_FragColor = vec4( color, 1.0 );
+    }
+`);
+
     let textureWidth;
     let textureHeight;
     let density;
@@ -431,6 +441,7 @@ window.addEventListener('load', function () {
     const vorticityProgram = new GLProgram(baseVertexShader, vorticityShader);
     const pressureProgram = new GLProgram(baseVertexShader, pressureShader);
     const gradienSubtractProgram = new GLProgram(baseVertexShader, gradientSubtractShader);
+    const circProgram = new GLProgram(baseVertexShader, circShader);
 
     function initFramebuffers() {
         // textureWidth = gl.drawingBufferWidth >> config.TEXTURE_DOWNSAMPLE;
@@ -463,8 +474,8 @@ window.addEventListener('load', function () {
         let fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
-        gl.viewport(0, 0, w, h);
-        // gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+        // gl.viewport(0, 0, w, h);
+        gl.viewport(0, 0, canvas.width, canvas.height);
 
         gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -510,12 +521,13 @@ window.addEventListener('load', function () {
 
     function update() {
         resizeCanvas();
+        // webglUtils.resizeCanvasToDisplaySize(canvas);
 
         const dt = Math.min((Date.now() - lastTime) / 1000, 0.016);
         lastTime = Date.now();
 
-        // gl.viewport(0, 0, canvas.width, canvas.height);
-        gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        // gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
 
 
         if (splatStack.length > 0)
@@ -537,14 +549,26 @@ window.addEventListener('load', function () {
         density.swap();
 
 
+        //2d circle/////
+        // var c = document.getElementById("2dCanvas");
+        // var ctx = c.getContext("2d");
+        // ctx.beginPath();
+        // ctx.arc(c.width / 2, c.height / 2, 0, 0, 2 * Math.PI);
+        // ctx.strokeStyle = "red";
+        // ctx.stroke();
+        // ctx.clearRect(0, 0, ctx.width, ctx.height);
+
         for (var i = 0; i < pointers.length; i++) {
             const pointer = pointers[i];
             if (pointer.moved) {
                 splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
                 pointer.moved = false;
-            }
-        }
 
+            }
+            // pointer.x += Math.random() * 3;
+            // pointer.y += Math.random() * 3;
+
+        }
 
         curlProgram.bind();
         gl.uniform2f(curlProgram.uniforms.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
@@ -593,13 +617,35 @@ window.addEventListener('load', function () {
         blit(velocity.write[1]);
         velocity.swap();
 
+
         // gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-        gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
+        gl.viewport(0, 0, canvas.width, canvas.height);
         displayProgram.bind();
         gl.uniform1i(displayProgram.uniforms.uTexture, density.read[2]);
         blit(null);
 
+        circProgram.bind();
+        gl.uniform1f(circProgram.uniforms.uTexture, density.read[2]);
+
+        // ctx = null;
+        // ctx = enableWebGLCanvas(canvas);
+
+
+        // ctx.start2D();
+        // render_arc(canvas, ctx);
+        // ctx.finish2D();
         requestAnimationFrame(update);
+    }
+
+    function render_arc(canvas, ctx) {
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = "black";
+        ctx.beginPath();
+        ctx.arc(canvas.width * 0.5, canvas.height * 0.5, 100, 0, Math.PI + (Math.sin(time) * Math.PI));
+        ctx.stroke();
+
     }
 
     function splat(x, y, dx, dy, color) {
@@ -645,15 +691,16 @@ window.addEventListener('load', function () {
 
     }
 
-    canvas.addEventListener('mousemove', (e) => {
+    document.querySelector("body").addEventListener('mousemove', (e) => {
         pointers[0].moved = pointers[0].down;
         pointers[0].dx = (e.offsetX - pointers[0].x) * 10.0;
         pointers[0].dy = (e.offsetY - pointers[0].y) * 10.0;
         pointers[0].x = e.offsetX;
         pointers[0].y = e.offsetY;
+        // createRandomNodes(50, 2, 300);
     });
 
-    canvas.addEventListener('touchmove', (e) => {
+    document.querySelector("body").addEventListener('touchmove', (e) => {
         e.preventDefault();
         const touches = e.targetTouches;
         for (let i = 0; i < touches.length; i++) {
@@ -666,12 +713,12 @@ window.addEventListener('load', function () {
         }
     }, false);
 
-    canvas.addEventListener('mousedown', () => {
+    document.querySelector("body").addEventListener('mousedown', () => {
         pointers[0].down = true;
         pointers[0].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
     });
 
-    canvas.addEventListener('touchstart', (e) => {
+    document.querySelector("body").addEventListener('touchstart', (e) => {
         e.preventDefault();
         const touches = e.targetTouches;
         for (let i = 0; i < touches.length; i++) {
@@ -684,6 +731,7 @@ window.addEventListener('load', function () {
             pointers[i].y = touches[i].pageY;
             pointers[i].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
         }
+
     });
 
     window.addEventListener('mouseup', () => {

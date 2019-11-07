@@ -18,21 +18,38 @@
         }
 
         canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            /* pointer-events: none; */
+
         }
     </style>
-
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.js"></script>
+    <script type="text/javascript" src="gl-matrix-min.js"></script>
+    <script type="text/javascript" src="litegl.min.js"></script>
+    <script type="text/javascript" src="Canvas2DtoWebGL.js"></script>
     <script id="text/javascript" src="circle.js"></script>
+    <script id="text/javascript" src="smoke.js"></script>
+
+
+
 </head>
 
 <body>
-    <!-- <canvas id="myCanvas"></canvas> -->
-    <script id="text/javascript" src="smoke.js"></script>
+    <!-- <div id="container"> -->
+
+    <canvas id="myCanvas"></canvas>
+    <canvas id="2dCanvas"></canvas>
+
+
+
+    <!-- </div> -->
 </body>
-<!-- to use the circle.js script comment out the script tg calling smoke.js and the canvas tag -->
+
 
 
 
