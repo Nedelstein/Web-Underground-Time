@@ -13,7 +13,7 @@ window.addEventListener('load', function () {
         VELOCITY_DISSIPATION: 0.99,
         PRESSURE_DISSIPATION: 0.8,
         PRESSURE_ITERATIONS: 25,
-        CURL: 30,
+        CURL: 28,
         SPLAT_RADIUS: 0.009
     }
 
@@ -685,7 +685,7 @@ window.addEventListener('load', function () {
             initFramebuffers();
 
         }
-        // console.log(canvas.width, canvas.height);
+        // console.log(canvascirc.width, canvas.height);
         // console.log("client height: ", canvas.clientWidth, canvas.clientHeight);
 
 
