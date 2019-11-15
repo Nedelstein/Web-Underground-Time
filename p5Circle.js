@@ -2,9 +2,27 @@ let toggle = false;
 let lastCheck = 0;
 let numDots;
 
+var c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11;
+var currentTime;
+
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight, WEBGL);
   createEasyCam();
+
+  c1 = color(255, 255, 255);
+  c2 = color(24, 180, 245);
+  c3 = color(4, 172, 114); //3time
+  c4 = color(254, 242, 169);
+  c5 = color(1, 168, 239);
+  c6 = color(247, 206, 92);
+  c7 = color(21, 143, 200);
+  c8 = color(79, 67, 82);
+  c9 = color(211, 135, 35);
+  c10 = color(102, 136, 176);
+  c11 = color(190, 116, 105); //twice
+  c12 = color(79, 67, 82);
+  let currentTime = hour();
+  console.log("Current Hour:" + currentTime);
 }
 
 let total = 25;
@@ -65,6 +83,10 @@ numDots = total * total;
 
 function draw() {
   background(0, 0);
+  // push();
+  // translate(-width / 2, -height / 2, -100);
+  // TimetoGrad();
+  // pop();
 
   for (let i = 0; i < numDots; i++) {
     noFill();
@@ -90,4 +112,91 @@ function draw() {
   }
 
   //   console.log(r0);
+}
+
+function setGradient(color1, color2) {
+  // noprotect
+  noFill();
+  for (var y = 0; y < height; y++) {
+    var inter = map(y, 0, height, 0, 1);
+    var c = lerpColor(color1, color2, inter);
+    stroke(c);
+    line(0, y, width, y);
+  }
+}
+function TimetoGrad() {
+  let currentTime = hour();
+  if (currentTime == 6) {
+    setGradient(c1, c2);
+  }
+  if (currentTime == 7) {
+    setGradient(c2, c2);
+  }
+  if (currentTime == 8) {
+    setGradient(c2, c2);
+  }
+  if (currentTime == 9) {
+    setGradient(c2, c3);
+  }
+  if (currentTime == 10) {
+    setGradient(c3, c4);
+  }
+  if (currentTime == 11) {
+    setGradient(c4, c5);
+  }
+  if (currentTime == 12) {
+    setGradient(c5, c6);
+  }
+  if (currentTime == 13) {
+    setGradient(c6, c7);
+  }
+  if (currentTime == 14) {
+    setGradient(c7, c8);
+  }
+  if (currentTime == 15) {
+    setGradient(c8, c9);
+  }
+  if (currentTime == 16) {
+    setGradient(c9, c10);
+  }
+  if (currentTime == 17) {
+    setGradient(c10, c11);
+  }
+  if (currentTime == 18) {
+    setGradient(c11, c12);
+  }
+  if (currentTime == 19) {
+    setGradient(c12, c11);
+  }
+  if (currentTime == 20) {
+    setGradient(c11, c12);
+  }
+  if (currentTime == 21) {
+    setGradient(c12, c11);
+  }
+  if (currentTime == 22) {
+    setGradient(c11, c10);
+  }
+  if (currentTime == 23) {
+    setGradient(c10, c9);
+  }
+  if (currentTime == 0) {
+    setGradient(c9, c8);
+  }
+  if (currentTime == 1) {
+    setGradient(c8, c7);
+  }
+  if (currentTime == 2) {
+    setGradient(c7, c6);
+  }
+  if (currentTime == 3) {
+    setGradient(c6, c5);
+  }
+  if (currentTime == 4) {
+    setGradient(c5, c4);
+  }
+  if (currentTime == 5) {
+    setGradient(c4, c3);
+  }
+  //console.log(currentTime);
 }
