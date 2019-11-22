@@ -48,7 +48,6 @@ var currentTime;
 
 function setup() {
   createCanvas(window.innerWidth, window.innerHeight, WEBGL);
-  // createEasyCam();
 
   c0 = color(0, 0, 12, 180); //hour0,23
   c1 = color(15, 15, 26, 180); //hour1&2&3 b
