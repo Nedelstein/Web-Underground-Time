@@ -1,4 +1,7 @@
-"use strict";
+import styles from "./styles/styles.scss";
+
+("use strict");
+
 window.addEventListener("load", function() {
   const canvas = document.getElementById("myCanvas");
   canvas.width = canvas.clientWidth;

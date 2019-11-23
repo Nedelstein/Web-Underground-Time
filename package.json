@@ -1,0 +1,45 @@
+{
+  "name": "smoke_test",
+  "version": "1.0.0",
+  "description": "Abstraction of Time installation for Parsons MFA Design and Technology class \"Web Underground\"",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config ./config/webpack.config.js",
+    "start": "serve public/dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nedelstein/Web-Underground-Time.git"
+  },
+  "author": "noah edelstein",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nedelstein/Web-Underground-Time/issues"
+  },
+  "homepage": "https://github.com/Nedelstein/Web-Underground-Time#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/node": "^7.7.4",
+    "@babel/preset-env": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "@babel/register": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "node-sass": "^4.13.0",
+    "webpack": "^4.41.2"
+  },
+  "dependencies": {
+    "css-loader": "^3.2.0",
+    "file-loader": "^4.3.0",
+    "html-inline-css-webpack-plugin": "^1.8.0",
+    "html-webpack-inline-source-plugin": "0.0.10",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "sass-loader": "^8.0.0",
+    "serve": "^11.2.0",
+    "webpack-cli": "^3.3.10"
+  }
+}

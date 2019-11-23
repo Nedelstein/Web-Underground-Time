@@ -74,7 +74,7 @@ function setup() {
   c22 = color(73, 146, 176, 180); //hour13 b
   c23 = color(37, 88, 126, 180); //hour 13end
   c24 = color(44, 143, 193, 180); //hour 14 b
-  c25 = color(30, 82, 142, 180); //hour hour14 end
+  c25 = color(30, 82, 142, 180); //hour hour14 endi
   c26 = color(37, 88, 126, 180); //hour 15 b
   c27 = color(74, 97, 106, 180); // hour 15 end
   c28 = color(35, 71, 113, 180); // hour 16b
