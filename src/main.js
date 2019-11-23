@@ -1,2 +1,2 @@
-require("./smoke2.js");
-require("./p5Circle.js");
+import "smoke2.js";
+import "p5Circle.js";

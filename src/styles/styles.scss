@@ -31,39 +31,3 @@ canvas {
   width: 100%;
   height: 100%;
 }
-
-.controls {
-  position: absolute;
-  z-index: 1;
-  width: 20%;
-  padding: 0 10px 10px 20px;
-}
-
-.controls select,
-.controls input {
-  display: block;
-  width: 100%;
-}
-
-.controls span {
-  color: white;
-}
-
-.sliderGroup {
-  width: 100%;
-}
-
-.sliderGroup input {
-  padding: 0;
-  margin: 0;
-  float: left;
-  border: 0;
-}
-
-.sliderGroup input[type="range"] {
-  width: calc(100% - 58px);
-}
-
-.sliderGroup input[type="text"] {
-  width: 58px;
-}

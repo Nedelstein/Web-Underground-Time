@@ -8,13 +8,11 @@ const HtmlWebpackInlineSourcePlugin = require("html-webpack-inline-source-plugin
 
 module.exports = {
   entry: {
-    bundle: [
-      path.resolve(__dirname, "../src/p5Circle.js"),
-      path.resolve(__dirname, "../src/smoke2.js")
-    ]
+    p5Circle: "./src/p5Circle.js",
+    smoke2: "./src/smoke2.js"
   },
   output: {
-    filename: "app.js",
+    filename: "[name].bundle.js",
     path: path.resolve(__dirname, "../dist")
   },
   module: {
@@ -56,7 +54,7 @@ module.exports = {
     new HtmlWebpackPlugin(),
     new HTMLInlineCSSWebpackPlugin(),
     new HtmlWebpackPlugin({
-      inlineSource: ".(css|js)$",
+      inlineSource: ".(css)$",
       inject: true,
       template: path.resolve(__dirname, "../src/index.html")
     }),
