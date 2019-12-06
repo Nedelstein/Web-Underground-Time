@@ -2,7 +2,7 @@ module.exports = {
   ident: "postcss",
   plugins: [
     require("postcss-preset-env")({
-      browsers: "last 5 versions",
+      browsers: "Chrome > 52",
       stage: 4
     })
   ]
