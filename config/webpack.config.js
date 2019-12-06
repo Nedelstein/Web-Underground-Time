@@ -27,6 +27,7 @@ module.exports = {
   output: {
     // filename: "[name].bundle.js",
     filename: `${versionUUID}/[hash].js`,
+    filename: `${versionUUID}/[hash].js`,
     path: path.resolve(__dirname, "../docs")
   },
   module: {
