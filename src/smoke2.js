@@ -7,7 +7,7 @@ window.addEventListener("load", function() {
   canvas.width = canvas.clientWidth;
   canvas.height = canvas.clientHeight;
 
-  let config = {
+  var config = {
     SIM_RESOLUTION: 128,
     DYE_RESOLUTION: 512,
     DENSITY_DISSIPATION: 0.97,
@@ -40,9 +40,9 @@ window.addEventListener("load", function() {
     this.color = [30, 0, 300];
   }
 
-  let pointers = [];
-  let splatStack = [];
-  let bloomFramebuffers = [];
+  var pointers = [];
+  var splatStack = [];
+  var bloomFramebuffers = [];
   pointers.push(new pointerPrototype());
 
   const { gl, ext } = getWebGLContext(canvas);
@@ -62,15 +62,15 @@ window.addEventListener("load", function() {
       preserveDrawingBuffer: false
     };
 
-    let gl = canvas.getContext("webgl2", params);
+    var gl = canvas.getContext("webgl2", params);
     const isWebGL2 = !!gl;
     if (!isWebGL2)
       gl =
         canvas.getContext("webgl", params) ||
         canvas.getContext("experimental-webgl", params);
 
-    let halfFloat;
-    let supportLinearFiltering;
+    var halfFloat;
+    var supportLinearFiltering;
     if (isWebGL2) {
       gl.getExtension("EXT_color_buffer_float");
       supportLinearFiltering = gl.getExtension("OES_texture_float_linear");
@@ -84,9 +84,9 @@ window.addEventListener("load", function() {
     const halfFloatTexType = isWebGL2
       ? gl.HALF_FLOAT
       : halfFloat.HALF_FLOAT_OES;
-    let formatRGBA;
-    let formatRG;
-    let formatR;
+    var formatRGBA;
+    var formatRG;
+    var formatR;
 
     if (isWebGL2) {
       formatRGBA = getSupportedFormat(
@@ -134,7 +134,7 @@ window.addEventListener("load", function() {
   }
 
   function supportRenderTextureFormat(gl, internalFormat, format, type) {
-    let texture = gl.createTexture();
+    var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -152,7 +152,7 @@ window.addEventListener("load", function() {
       null
     );
 
-    let fbo = gl.createFramebuffer();
+    var fbo = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.framebufferTexture2D(
       gl.FRAMEBUFFER,
@@ -175,16 +175,16 @@ window.addEventListener("load", function() {
     render(density.write.fbo);
     gl.bindFramebuffer(gl.FRAMEBUFFER, density.write.fbo);
 
-    let length = dyeWidth * dyeHeight * 4;
-    let pixels = new Float32Array(length);
+    var length = dyeWidth * dyeHeight * 4;
+    var pixels = new Float32Array(length);
     gl.readPixels(0, 0, dyeWidth, dyeHeight, gl.RGBA, gl.FLOAT, pixels);
 
-    let newPixels = new Uint8Array(length);
+    var newPixels = new Uint8Array(length);
 
-    let id = 0;
-    for (let i = dyeHeight - 1; i >= 0; i--) {
-      for (let j = 0; j < dyeWidth; j++) {
-        let nid = i * dyeWidth * 4 + j * 4;
+    var id = 0;
+    for (var i = dyeHeight - 1; i >= 0; i--) {
+      for (var j = 0; j < dyeWidth; j++) {
+        var nid = i * dyeWidth * 4 + j * 4;
         newPixels[nid + 0] = clamp01(pixels[id + 0]) * 255;
         newPixels[nid + 1] = clamp01(pixels[id + 1]) * 255;
         newPixels[nid + 2] = clamp01(pixels[id + 2]) * 255;
@@ -193,15 +193,15 @@ window.addEventListener("load", function() {
       }
     }
 
-    let captureCanvas = document.createElement("canvas");
-    let ctx = captureCanvas.getContext("2d");
+    var captureCanvas = document.createElement("canvas");
+    var ctx = captureCanvas.getContext("2d");
     captureCanvas.width = dyeWidth;
     captureCanvas.height = dyeHeight;
 
-    let imageData = ctx.createImageData(dyeWidth, dyeHeight);
+    var imageData = ctx.createImageData(dyeWidth, dyeHeight);
     imageData.data.set(newPixels);
     ctx.putImageData(imageData, 0, 0);
-    let datauri = captureCanvas.toDataURL();
+    var datauri = captureCanvas.toDataURL();
 
     downloadURI("fluid.png", datauri);
 
@@ -213,7 +213,7 @@ window.addEventListener("load", function() {
   }
 
   function downloadURI(filename, uri) {
-    let link = document.createElement("a");
+    var link = document.createElement("a");
     link.download = filename;
     link.href = uri;
     document.body.appendChild(link);
@@ -241,7 +241,7 @@ window.addEventListener("load", function() {
         this.program,
         gl.ACTIVE_UNIFORMS
       );
-      for (let i = 0; i < uniformCount; i++) {
+      for (var i = 0; i < uniformCount; i++) {
         const uniformName = gl.getActiveUniform(this.program, i).name;
         this.uniforms[uniformName] = gl.getUniformLocation(
           this.program,
@@ -735,18 +735,18 @@ window.addEventListener("load", function() {
     };
   })();
 
-  let simWidth;
-  let simHeight;
-  let dyeWidth;
-  let dyeHeight;
-  let density;
-  let velocity;
-  let divergence;
-  let curl;
-  let pressure;
-  let bloom;
+  var simWidth;
+  var simHeight;
+  var dyeWidth;
+  var dyeHeight;
+  var density;
+  var velocity;
+  var divergence;
+  var curl;
+  var pressure;
+  var bloom;
 
-  let ditheringTexture = createTextureAsync("LDR_RGB1_0.png");
+  var ditheringTexture = createTextureAsync("LDR_RGB1_0.png");
 
   const clearProgram = new GLProgram(baseVertexShader, clearShader);
   const colorProgram = new GLProgram(baseVertexShader, colorShader);
@@ -787,8 +787,8 @@ window.addEventListener("load", function() {
   );
 
   function initFramebuffers() {
-    let simRes = getResolution(config.SIM_RESOLUTION);
-    let dyeRes = getResolution(config.DYE_RESOLUTION);
+    var simRes = getResolution(config.SIM_RESOLUTION);
+    var dyeRes = getResolution(config.DYE_RESOLUTION);
 
     simWidth = simRes.width;
     simHeight = simRes.height;
@@ -870,7 +870,7 @@ window.addEventListener("load", function() {
   }
 
   function initBloomFramebuffers() {
-    let res = getResolution(config.BLOOM_RESOLUTION);
+    var res = getResolution(config.BLOOM_RESOLUTION);
 
     const texType = ext.halfFloatTexType;
     const rgba = ext.formatRGBA;
@@ -886,13 +886,13 @@ window.addEventListener("load", function() {
     );
 
     bloomFramebuffers.length = 0;
-    for (let i = 0; i < config.BLOOM_ITERATIONS; i++) {
-      let width = res.width >> (i + 1);
-      let height = res.height >> (i + 1);
+    for (var i = 0; i < config.BLOOM_ITERATIONS; i++) {
+      var width = res.width >> (i + 1);
+      var height = res.height >> (i + 1);
 
       if (width < 2 || height < 2) break;
 
-      let fbo = createFBO(
+      var fbo = createFBO(
         width,
         height,
         rgba.internalFormat,
@@ -906,7 +906,7 @@ window.addEventListener("load", function() {
 
   function createFBO(w, h, internalFormat, format, type, param) {
     gl.activeTexture(gl.TEXTURE0);
-    let texture = gl.createTexture();
+    var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
@@ -924,7 +924,7 @@ window.addEventListener("load", function() {
       null
     );
 
-    let fbo = gl.createFramebuffer();
+    var fbo = gl.createFramebuffer();
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.framebufferTexture2D(
       gl.FRAMEBUFFER,
@@ -950,8 +950,8 @@ window.addEventListener("load", function() {
   }
 
   function createDoubleFBO(w, h, internalFormat, format, type, param) {
-    let fbo1 = createFBO(w, h, internalFormat, format, type, param);
-    let fbo2 = createFBO(w, h, internalFormat, format, type, param);
+    var fbo1 = createFBO(w, h, internalFormat, format, type, param);
+    var fbo2 = createFBO(w, h, internalFormat, format, type, param);
 
     return {
       get read() {
@@ -967,7 +967,7 @@ window.addEventListener("load", function() {
         fbo2 = value;
       },
       swap() {
-        let temp = fbo1;
+        var temp = fbo1;
         fbo1 = fbo2;
         fbo2 = temp;
       }
@@ -975,7 +975,7 @@ window.addEventListener("load", function() {
   }
 
   function resizeFBO(target, w, h, internalFormat, format, type, param) {
-    let newFBO = createFBO(w, h, internalFormat, format, type, param);
+    var newFBO = createFBO(w, h, internalFormat, format, type, param);
     clearProgram.bind();
     gl.uniform1i(clearProgram.uniforms.uTexture, target.attach(0));
     gl.uniform1f(clearProgram.uniforms.value, 1);
@@ -998,7 +998,7 @@ window.addEventListener("load", function() {
   }
 
   function createTextureAsync(url) {
-    let texture = gl.createTexture();
+    var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -1016,7 +1016,7 @@ window.addEventListener("load", function() {
       new Uint8Array([255, 255, 255])
     );
 
-    let obj = {
+    var obj = {
       texture,
       width: 1,
       height: 1,
@@ -1027,7 +1027,7 @@ window.addEventListener("load", function() {
       }
     };
 
-    let image = new Image();
+    var image = new Image();
     image.onload = () => {
       obj.width = image.width;
       obj.height = image.height;
@@ -1042,7 +1042,7 @@ window.addEventListener("load", function() {
   initFramebuffers();
   multipleSplats(parseInt(Math.random() * 20) + 5);
 
-  let lastColorChangeTime = Date.now();
+  var lastColorChangeTime = Date.now();
 
   update();
 
@@ -1057,7 +1057,7 @@ window.addEventListener("load", function() {
   function input() {
     if (splatStack.length > 0) multipleSplats(splatStack.pop());
 
-    for (let i = 0; i < pointers.length; i++) {
+    for (var i = 0; i < pointers.length; i++) {
       const p = pointers[i];
       if (p.moved) {
         splat(p.x, p.y, p.dx, p.dy, p.color);
@@ -1069,7 +1069,7 @@ window.addEventListener("load", function() {
 
     if (lastColorChangeTime + 100 < Date.now()) {
       lastColorChangeTime = Date.now();
-      for (let i = 0; i < pointers.length; i++) {
+      for (var i = 0; i < pointers.length; i++) {
         const p = pointers[i];
         p.color = generateColor();
       }
@@ -1124,7 +1124,7 @@ window.addEventListener("load", function() {
       1.0 / simHeight
     );
     gl.uniform1i(pressureProgram.uniforms.uDivergence, divergence.attach(0));
-    for (let i = 0; i < config.PRESSURE_ITERATIONS; i++) {
+    for (var i = 0; i < config.PRESSURE_ITERATIONS; i++) {
       gl.uniform1i(pressureProgram.uniforms.uPressure, pressure.read.attach(1));
       blit(pressure.write.fbo);
       pressure.swap();
@@ -1159,7 +1159,7 @@ window.addEventListener("load", function() {
         1.0 / simWidth,
         1.0 / simHeight
       );
-    let velocityId = velocity.read.attach(0);
+    var velocityId = velocity.read.attach(0);
     gl.uniform1i(advectionProgram.uniforms.uVelocity, velocityId);
     gl.uniform1i(advectionProgram.uniforms.uSource, velocityId);
     gl.uniform1f(advectionProgram.uniforms.dt, dt);
@@ -1198,14 +1198,14 @@ window.addEventListener("load", function() {
       gl.disable(gl.BLEND);
     }
 
-    let width = target == null ? gl.drawingBufferWidth : dyeWidth;
-    let height = target == null ? gl.drawingBufferHeight : dyeHeight;
+    var width = target == null ? gl.drawingBufferWidth : dyeWidth;
+    var height = target == null ? gl.drawingBufferHeight : dyeHeight;
 
     gl.viewport(0, 0, width, height);
 
     if (!config.TRANSPARENT) {
       colorProgram.bind();
-      let bc = config.BACK_COLOR;
+      var bc = config.BACK_COLOR;
       gl.uniform4f(
         colorProgram.uniforms.color,
         bc.r / 255,
@@ -1226,7 +1226,7 @@ window.addEventListener("load", function() {
     }
 
     if (config.SHADING) {
-      let program = config.BLOOM
+      var program = config.BLOOM
         ? displayBloomShadingProgram
         : displayShadingProgram;
       program.bind();
@@ -1235,17 +1235,17 @@ window.addEventListener("load", function() {
       if (config.BLOOM) {
         gl.uniform1i(program.uniforms.uBloom, bloom.attach(1));
         gl.uniform1i(program.uniforms.uDithering, ditheringTexture.attach(2));
-        let scale = getTextureScale(ditheringTexture, width, height);
+        var scale = getTextureScale(ditheringTexture, width, height);
         gl.uniform2f(program.uniforms.ditherScale, scale.x, scale.y);
       }
     } else {
-      let program = config.BLOOM ? displayBloomProgram : displayProgram;
+      var program = config.BLOOM ? displayBloomProgram : displayProgram;
       program.bind();
       gl.uniform1i(program.uniforms.uTexture, density.read.attach(0));
       if (config.BLOOM) {
         gl.uniform1i(program.uniforms.uBloom, bloom.attach(1));
         gl.uniform1i(program.uniforms.uDithering, ditheringTexture.attach(2));
-        let scale = getTextureScale(ditheringTexture, width, height);
+        var scale = getTextureScale(ditheringTexture, width, height);
         gl.uniform2f(program.uniforms.ditherScale, scale.x, scale.y);
       }
     }
@@ -1256,14 +1256,14 @@ window.addEventListener("load", function() {
   function applyBloom(source, destination) {
     if (bloomFramebuffers.length < 2) return;
 
-    let last = destination;
+    var last = destination;
 
     gl.disable(gl.BLEND);
     bloomPrefilterProgram.bind();
-    let knee = config.BLOOM_THRESHOLD * config.BLOOM_SOFT_KNEE + 0.0001;
-    let curve0 = config.BLOOM_THRESHOLD - knee;
-    let curve1 = knee * 2;
-    let curve2 = 0.25 / knee;
+    var knee = config.BLOOM_THRESHOLD * config.BLOOM_SOFT_KNEE + 0.0001;
+    var curve0 = config.BLOOM_THRESHOLD - knee;
+    var curve1 = knee * 2;
+    var curve2 = 0.25 / knee;
     gl.uniform3f(bloomPrefilterProgram.uniforms.curve, curve0, curve1, curve2);
     gl.uniform1f(
       bloomPrefilterProgram.uniforms.threshold,
@@ -1274,8 +1274,8 @@ window.addEventListener("load", function() {
     blit(last.fbo);
 
     bloomBlurProgram.bind();
-    for (let i = 0; i < bloomFramebuffers.length; i++) {
-      let dest = bloomFramebuffers[i];
+    for (var i = 0; i < bloomFramebuffers.length; i++) {
+      var dest = bloomFramebuffers[i];
       gl.uniform2f(
         bloomBlurProgram.uniforms.texelSize,
         1.0 / last.width,
@@ -1290,8 +1290,8 @@ window.addEventListener("load", function() {
     gl.blendFunc(gl.ONE, gl.ONE);
     gl.enable(gl.BLEND);
 
-    for (let i = bloomFramebuffers.length - 2; i >= 0; i--) {
-      let baseTex = bloomFramebuffers[i];
+    for (var i = bloomFramebuffers.length - 2; i >= 0; i--) {
+      var baseTex = bloomFramebuffers[i];
       gl.uniform2f(
         bloomBlurProgram.uniforms.texelSize,
         1.0 / last.width,
@@ -1342,7 +1342,7 @@ window.addEventListener("load", function() {
   }
 
   function multipleSplats(amount) {
-    for (let i = 0; i < amount; i++) {
+    for (var i = 0; i < amount; i++) {
       const color = generateColor();
       color.r *= 10.0;
       color.g *= 10.0;
@@ -1379,8 +1379,8 @@ window.addEventListener("load", function() {
     e => {
       e.preventDefault();
       const touches = e.targetTouches;
-      for (let i = 0; i < touches.length; i++) {
-        let pointer = pointers[i];
+      for (var i = 0; i < touches.length; i++) {
+        var pointer = pointers[i];
         pointer.moved = pointer.down;
         pointer.dx = (touches[i].pageX - pointer.x) * 8.0;
         pointer.dy = (touches[i].pageY - pointer.y) * 8.0;
@@ -1399,7 +1399,7 @@ window.addEventListener("load", function() {
   document.querySelector("body").addEventListener("touchstart", e => {
     e.preventDefault();
     const touches = e.targetTouches;
-    for (let i = 0; i < touches.length; i++) {
+    for (var i = 0; i < touches.length; i++) {
       if (i >= pointers.length) pointers.push(new pointerPrototype());
 
       pointers[i].id = touches[i].identifier;
@@ -1416,8 +1416,8 @@ window.addEventListener("load", function() {
 
   document.querySelector("body").addEventListener("touchend", e => {
     const touches = e.changedTouches;
-    for (let i = 0; i < touches.length; i++)
-      for (let j = 0; j < pointers.length; j++)
+    for (var i = 0; i < touches.length; i++)
+      for (var j = 0; j < pointers.length; j++)
         if (touches[i].identifier == pointers[j].id) pointers[j].down = false;
   });
 
@@ -1427,7 +1427,7 @@ window.addEventListener("load", function() {
   });
 
   function generateColor() {
-    let c = HSVtoRGB(Math.random(), 1.0, 1.0);
+    var c = HSVtoRGB(Math.random(), 1.0, 1.0);
     c.r *= 0.15;
     c.g *= 0.15;
     c.b *= 0.15;
@@ -1435,7 +1435,7 @@ window.addEventListener("load", function() {
   }
 
   function HSVtoRGB(h, s, v) {
-    let r, g, b, i, f, p, q, t;
+    var r, g, b, i, f, p, q, t;
     i = Math.floor(h * 6);
     f = h * 6 - i;
     p = v * (1 - s);
@@ -1471,11 +1471,11 @@ window.addEventListener("load", function() {
   }
 
   function getResolution(resolution) {
-    let aspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight;
+    var aspectRatio = gl.drawingBufferWidth / gl.drawingBufferHeight;
     if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
 
-    let max = Math.round(resolution * aspectRatio);
-    let min = Math.round(resolution);
+    var max = Math.round(resolution * aspectRatio);
+    var min = Math.round(resolution);
 
     if (gl.drawingBufferWidth > gl.drawingBufferHeight)
       return { width: max, height: min };

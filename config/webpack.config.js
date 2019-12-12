@@ -21,12 +21,13 @@ const versionUUID = create_UUID();
 
 module.exports = {
   entry: {
-    p5Circle: "./src/p5Circle.js",
-    smoke2: "./src/smoke2.js"
+    // p5Circle: "./src/p5Circle.js",
+    // smoke2: "./src/smoke2.js"
+    p5Box: "./box_alternative/script.js"
   },
   output: {
     // filename: "[name].bundle.js",
-    filename: `${versionUUID}/[hash].js`,
+    // filename: `${versionUUID}/[hash].js`,
     filename: `${versionUUID}/[hash].js`,
     path: path.resolve(__dirname, "../docs")
   },
@@ -79,12 +80,12 @@ module.exports = {
       chunkFilename: "[id].css"
     }),
     new HtmlWebpackPlugin(),
-    new HTMLInlineCSSWebpackPlugin(),
+    // new HTMLInlineCSSWebpackPlugin(),
     new HtmlWebpackPlugin({
       // inlineSource: ".(css)$",
       inject: true,
-      // template: path.resolve(__dirname, "../src/index.html"),
-      template: "./src/index.html",
+      template: path.resolve(__dirname, "../src/index.html"),
+      // template: "./src/index.html"
       filename: `${versionUUID}/index.html`
     })
     // new HtmlWebpackInlineSourcePlugin()

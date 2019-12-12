@@ -3,9 +3,9 @@ import p5 from "p5";
 const containerElement = document.getElementById("p5-container");
 
 const sketch = p5 => {
-  let toggle = false;
-  let lastCheck = 0;
-  let numDots;
+  var toggle = false;
+  var lastCheck = 0;
+  var numDots;
 
   var c0,
     c1,
@@ -53,7 +53,6 @@ const sketch = p5 => {
 
   p5.setup = () => {
     p5.createCanvas(window.innerWidth, window.innerHeight, p5.WEBGL);
-
     c0 = p5.color(0, 0, 12, 180); //hour0,23
     c1 = p5.color(15, 15, 26, 180); //hour1&2&3 b
     c2 = p5.color(30, 28, 36, 180); //hr1 end
@@ -96,44 +95,44 @@ const sketch = p5 => {
     c39 = p5.color(75, 38, 22, 180); //hr 21 end
     c40 = p5.color(20, 16, 15, 180); //hr 22 b
     c41 = p5.color(64, 33, 19, 180); //hr 22 end
-    let currentTime = p5.hour();
+    var currentTime = p5.hour();
     console.log("Current Hour:" + currentTime);
   };
 
-  let total = 25;
-  let lat = [];
-  for (let i = 0; i < total; i++) {
+  var total = 25;
+  var lat = [];
+  for (var i = 0; i < total; i++) {
     lat.push(i);
   }
   lat = lat.map(a => (a * Math.PI) / total - Math.PI / 2);
 
-  let lon = [];
-  for (let i = 0; i < total; i++) {
+  var lon = [];
+  for (var i = 0; i < total; i++) {
     lon.push(i);
   }
   lon = lon.map((a, i) => (2 * a * Math.PI) / total - Math.PI);
 
-  let r = 120;
-  let dr = 1;
-  let x0 = [];
-  let y0 = [];
-  let z0 = [];
-  let dx_array = [];
-  let dy_array = [];
-  let dz_array = [];
-  let x0_draw = [];
-  let y0_draw = [];
-  let z0_draw = [];
+  var r = 120;
+  var dr = 1;
+  var x0 = [];
+  var y0 = [];
+  var z0 = [];
+  var dx_array = [];
+  var dy_array = [];
+  var dz_array = [];
+  var x0_draw = [];
+  var y0_draw = [];
+  var z0_draw = [];
 
-  for (let i = 0; i < total; i++) {
-    for (let j = 0; j < total; j++) {
-      let x = r * Math.sin(lon[i]) * Math.cos(lat[j]);
-      let y = r * Math.sin(lon[i]) * Math.sin(lat[j]);
-      let z = r * Math.cos(lon[i]);
+  for (var i = 0; i < total; i++) {
+    for (var j = 0; j < total; j++) {
+      var x = r * Math.sin(lon[i]) * Math.cos(lat[j]);
+      var y = r * Math.sin(lon[i]) * Math.sin(lat[j]);
+      var z = r * Math.cos(lon[i]);
 
-      let dx = dr * Math.sin(lon[i]) * Math.cos(lat[j]);
-      let dy = dr * Math.sin(lon[i]) * Math.sin(lat[j]);
-      let dz = dr * Math.cos(lon[i]);
+      var dx = dr * Math.sin(lon[i]) * Math.cos(lat[j]);
+      var dy = dr * Math.sin(lon[i]) * Math.sin(lat[j]);
+      var dz = dr * Math.cos(lon[i]);
 
       x0.push(x);
       y0.push(y);
@@ -151,6 +150,7 @@ const sketch = p5 => {
   numDots = total * total;
 
   p5.draw = () => {
+    p5.image(vid, 0, 0); // draw the video frame to canvas
     p5.background(0, 0);
     p5.smooth();
     p5.push();
@@ -158,13 +158,13 @@ const sketch = p5 => {
     TimetoGrad();
     p5.pop();
 
-    for (let i = 0; i < numDots; i++) {
+    for (var i = 0; i < numDots; i++) {
       p5.noFill();
       p5.stroke(255);
       p5.point(x0_draw[i], y0_draw[i], z0_draw[i]);
     }
 
-    for (let i = 0; i < numDots; i++) {
+    for (var i = 0; i < numDots; i++) {
       if (toggle) {
         x0_draw[i] += dx_array[i];
         y0_draw[i] += dy_array[i];
@@ -194,7 +194,7 @@ const sketch = p5 => {
   }
 
   function TimetoGrad() {
-    let currentTime = p5.hour();
+    var currentTime = p5.hour();
     if (currentTime == 0) {
       setGradient(c0, c0);
     }
@@ -272,3 +272,210 @@ const sketch = p5 => {
 };
 
 new p5(sketch, containerElement);
+
+// import styles from "./styles/styles.scss";
+
+// var toggle = false;
+// var lastCheck = 0;
+// var numDots;
+
+// var c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11;
+// var currentTime;
+
+// function setup() {
+//   createCanvas(window.innerWidth, window.innerHeight, WEBGL);
+//   // createEasyCam();
+//   console.log("working");
+
+//   c1 = color(255, 255, 255, 180);
+//   c2 = color(24, 180, 245, 180);
+//   c3 = color(4, 172, 114, 180); //3time
+//   c4 = color(254, 242, 169, 180);
+//   c5 = color(1, 168, 239, 180);
+//   c6 = color(247, 206, 92, 180);
+//   c7 = color(21, 143, 200, 180);
+//   c8 = color(79, 67, 82, 180);
+//   c9 = color(211, 135, 35, 180);
+//   c10 = color(102, 136, 176, 180);
+//   c11 = color(190, 116, 105, 180); //twice
+//   c12 = color(79, 67, 82, 180);
+//   var currentTime = hour();
+//   console.log("Current Hour:" + currentTime);
+// }
+
+// var total = 25;
+// var lat = [];
+// for (var i = 0; i < total; i++) {
+//   lat.push(i);
+// }
+// lat = lat.map(a => (a * Math.PI) / total - Math.PI / 2);
+
+// var lon = [];
+// for (var i = 0; i < total; i++) {
+//   lon.push(i);
+// }
+// lon = lon.map((a, i) => (2 * a * Math.PI) / total - Math.PI);
+
+// var r = 120;
+// var dr = 1;
+// var x0 = [];
+// var y0 = [];
+// var z0 = [];
+// var dx_array = [];
+// var dy_array = [];
+// var dz_array = [];
+// var x0_draw = [];
+// var y0_draw = [];
+// var z0_draw = [];
+
+// for (var i = 0; i < total; i++) {
+//   for (var j = 0; j < total; j++) {
+//     var x = r * Math.sin(lon[i]) * Math.cos(lat[j]);
+//     var y = r * Math.sin(lon[i]) * Math.sin(lat[j]);
+//     var z = r * Math.cos(lon[i]);
+
+//     var dx = dr * Math.sin(lon[i]) * Math.cos(lat[j]);
+//     var dy = dr * Math.sin(lon[i]) * Math.sin(lat[j]);
+//     var dz = dr * Math.cos(lon[i]);
+
+//     x0.push(x);
+//     y0.push(y);
+//     z0.push(z);
+//     x0_draw.push(x);
+//     y0_draw.push(y);
+//     z0_draw.push(z);
+
+//     dx_array.push(dx);
+//     dy_array.push(dy);
+//     dz_array.push(dz);
+//   }
+// }
+
+// console.log(dx_array);
+
+// // var x = startPoints[0][0];
+// // var y = startPoints[0][1];
+// // var z = startPoints[0][2];
+
+// numDots = total * total;
+
+// function draw() {
+//   background(0);
+//   smooth();
+//   push();
+//   translate(-width / 2, -height / 2);
+//   TimetoGrad();
+//   pop();
+
+//   for (var i = 0; i < numDots; i++) {
+//     noFill();
+//     stroke(255);
+//     point(x0_draw[i], y0_draw[i], z0_draw[i]);
+//   }
+
+//   for (var i = 0; i < numDots; i++) {
+//     if (toggle) {
+//       x0_draw[i] += dx_array[i];
+//       y0_draw[i] += dy_array[i];
+//       z0_draw[i] += dz_array[i];
+//     } else {
+//       x0_draw[i] -= dx_array[i];
+//       y0_draw[i] -= dy_array[i];
+//       z0_draw[i] -= dz_array[i];
+//     }
+
+//     if (millis() > lastCheck + 1000) {
+//       toggle = !toggle;
+//       lastCheck = millis();
+//     }
+//   }
+
+//   //   console.log(r0);
+// }
+
+// function setGradient(color1, color2) {
+//   // noprotect
+//   noFill();
+//   for (var y = 0; y < height; y++) {
+//     var inter = map(y, 0, height, 0, 1);
+//     var c = lerpColor(color1, color2, inter);
+//     stroke(c);
+//     line(0, y, width, y);
+//   }
+// }
+// function TimetoGrad() {
+//   var currentTime = hour();
+//   if (currentTime == 6) {
+//     setGradient(c1, c2);
+//   }
+//   if (currentTime == 7) {
+//     setGradient(c2, c2);
+//   }
+//   if (currentTime == 8) {
+//     setGradient(c2, c2);
+//   }
+//   if (currentTime == 9) {
+//     setGradient(c2, c3);
+//   }
+//   if (currentTime == 10) {
+//     setGradient(c3, c4);
+//   }
+//   if (currentTime == 11) {
+//     setGradient(c4, c5);
+//   }
+//   if (currentTime == 12) {
+//     setGradient(c5, c6);
+//   }
+//   if (currentTime == 13) {
+//     setGradient(c6, c7);
+//   }
+//   if (currentTime == 14) {
+//     setGradient(c7, c8);
+//   }
+//   if (currentTime == 15) {
+//     setGradient(c8, c9);
+//   }
+//   if (currentTime == 16) {
+//     setGradient(c9, c10);
+//   }
+//   if (currentTime == 17) {
+//     setGradient(c10, c11);
+//   }
+//   if (currentTime == 18) {
+//     setGradient(c5, c6);
+//   }
+//   if (currentTime == 19) {
+//     setGradient(c12, c11);
+//   }
+//   if (currentTime == 20) {
+//     setGradient(c11, c12);
+//   }
+//   if (currentTime == 21) {
+//     setGradient(c12, c11);
+//   }
+//   if (currentTime == 22) {
+//     setGradient(c11, c10);
+//   }
+//   if (currentTime == 23) {
+//     setGradient(c10, c9);
+//   }
+//   if (currentTime == 0) {
+//     setGradient(c9, c8);
+//   }
+//   if (currentTime == 1) {
+//     setGradient(c8, c7);
+//   }
+//   if (currentTime == 2) {
+//     setGradient(c7, c6);
+//   }
+//   if (currentTime == 3) {
+//     setGradient(c6, c5);
+//   }
+//   if (currentTime == 4) {
+//     setGradient(c5, c4);
+//   }
+//   if (currentTime == 5) {
+//     setGradient(c4, c3);
+//   }
+//   //console.log(currentTime);
+// }
